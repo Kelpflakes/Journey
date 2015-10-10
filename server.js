@@ -5,15 +5,18 @@ var express = require("express"),
 
 app.use(express.static('public'));
 
-
-router.post('/hello', function(req, res) {   
-    //res.json({ message: 'hooray! welcome to our api!' });    
+router.get("/", function(req, res){
+    res.sendFile(__dirname + '/public/inputpage.html');
 });
 
-router.get('/hello', function(req, res) {   
-    res.json({ message: 'hooray! welcome to our api!' });    
+router.get('/test', function(req, res) {     
+    var start = req.query.start;
+    var end = req.query.end;
+    var time = req.query.time;
+    res.send(start + ' ' + end + ' ' + time);
 });
 
-app.use('/result', router);
+
+app.use('/', router);
 app.listen(port);
 console.log('Magic happens on port ' + port);
