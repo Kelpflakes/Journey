@@ -1,7 +1,7 @@
 var http = require("https");
 
 module.exports = {
-    route: function (coorA, coorB, callback){
+    route: function (coorA, coorB, callback, req, res){
         //console.log(coorA);
         //console.log(coorB);
         
@@ -28,7 +28,7 @@ module.exports = {
                 var response = JSON.parse(buffer);
                 //console.log(response);
                 callback(
-                    response
+                    response, req, res
                 );
             }); 
         }); 

@@ -1,7 +1,7 @@
 var http = require("https");
 
 module.exports = {
-    coder: function (a, callback){
+    coder: function (a, callback, req, res){
         var mystring = a;
         var buffer = "", 
                 data;
@@ -27,7 +27,7 @@ module.exports = {
                 var response = JSON.parse(buffer);
                 //console.log(response.Response.View[0].Result[0].Location.NavigationPosition);
                 callback(
-                    response.Response.View[0].Result[0].Location.NavigationPosition
+                    response.Response.View[0].Result[0].Location.NavigationPosition, req, res
                 );
             }); 
         }); 
