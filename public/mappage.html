@@ -28,6 +28,17 @@ function moveMapToBerlin(map){
   map.setZoom(14);
 }
 
+function processJSON(json){
+	var obj = JSON.parse(json);
+	var maneuver = obj.route[0].leg.maneuver;
+	var data = [[], [], []];
+	for (var i = 0; i < maneuver.length; i++){
+		data[0].push(maneuver[i].position.latitude);
+		data[1].push(maneuver[i].position.longitude);
+		data[2].push(maneuver[i].travelTime);
+	}
+	return data;
+}
 
 
 
@@ -38,8 +49,8 @@ function moveMapToBerlin(map){
 
 //Step 1: initialize communication with the platform
 var platform = new H.service.Platform({
-  app_id: 'DemoAppId01082013GAL',
-  app_code: 'AJKnXv84fjrb0KIHawS0Tg',
+  app_id: 'coZYlKFfMv8P9SZZj5AF',
+  app_code: 'b9mg-A1AaGwMKGdcIFPOJg',
   useCIT: true,
   useHTTPS: true
 });
@@ -57,8 +68,23 @@ var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 // Create the default UI components
 var ui = H.ui.UI.createDefault(map, defaultLayers);
 
+var strip = new H.geo.Strip();
+
+var points = processJSON(json);
+for (var i = 0; i < points[0].length; i++){
+	var p = new H.geo.Point(points[0][i], points[1][i]);
+	strip.pushPoint(p);
+}
+
+var polyline = new H.map.Polyline(strip, { style: { lineWidth: 10 }});
+
+// Add the polyline to the map:
+map.addObject(polyline);
+
+// Zoom the map to make sure the whole polyline is visible:
+map.setViewBounds(polyline.getBounds());
 // Now use the map as required...
-moveMapToBerlin(map);
+//moveMapToBerlin(map);
   </script>
 </body>
 </html>
