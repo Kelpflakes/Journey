@@ -3,6 +3,8 @@ var http = require("https");
 module.exports = {
     coder: function (a){
         var mystring = a;
+        var buffer = "", 
+                data;
         mystring.replace(/ /g , "%20");
         url = "https://geocoder.cit.api.here.com/6.2/geocode.json?searchtext=" + mystring + "&app_id=coZYlKFfMv8P9SZZj5AF&app_code=b9mg-A1AaGwMKGdcIFPOJg&gen=8";
 
@@ -11,9 +13,7 @@ module.exports = {
         var request = http.get(url, function (response) {
             // data is streamed in chunks from the server
             // so we have to handle the "data" event    
-            var buffer = "", 
-                data,
-                route;
+            
 
             response.on("data", function (chunk) {
                 buffer += chunk;
@@ -22,10 +22,13 @@ module.exports = {
             response.on("end", function (err) {
                 // finished transferring data
                 // dump the raw data
-                console.log(buffer);
-                console.log("\n");
-                data = JSON.parse(buffer);
-                return data;
+                //console.log(buffer);
+                //console.log("\n");
+                var response = JSON.parse(buffer);
+                console.log(response.Response.View[0].Result[0].Location.NavigationPosition);
+                callback({
+                    navPov: response.Response.View[0].Result[0].Location.NavigationPosition
+                });
             }); 
         }); 
     }

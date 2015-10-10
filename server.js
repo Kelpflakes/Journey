@@ -14,10 +14,11 @@ router.get('/test', function(req, res) {
     var start = req.query.start;
     var end = req.query.end;
     var time = req.query.time;
-    var dataS = geocoder.coder(start);
-    var dataE = geocoder.coder(end);
+    var dataS = geocoder.coder(start).navPov;
+    var dataE = geocoder.coder(end).navPov;
     
-    //res.send(dataS.DisplayPosition);
+    
+    res.send(dataS);
 });
 
 
