@@ -14,6 +14,10 @@
     src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
   <script type="text/javascript" charset="UTF-8"
     src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+  <script type="text/javascript" charset="UTF-8"
+            src="http://js.api.here.com/v3/3.0/mapsjs-places.js"></script>
+			<script type="text/javascript" charset="UTF-8"
+    src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
 </head>
 <body>
   <div id="map" style="width: 100%; height: 800px; background: grey" />
@@ -54,12 +58,54 @@ $.ajax({
  *
  * @param  {H.Map} map      A HERE Map instance within the application
  */
-  
-function moveMapToBerlin(map){
-  map.setCenter({lat:52.5159, lng:13.3777});
-  map.setZoom(14);
-}
 
+
+ var platform = new H.service.Platform({
+  app_id: 'coZYlKFfMv8P9SZZj5AF',
+  app_code: 'b9mg-A1AaGwMKGdcIFPOJg',
+  useCIT: true,
+  useHTTPS: true
+});
+var defaultLayers = platform.createDefaultLayers();
+
+//Step 2: initialize a map  - not specificing a location will give a whole world view.
+var map = new H.Map(document.getElementById('map'),
+  defaultLayers.normal.map);
+var group = new H.map.Group();
+group.addEventListener('tap', function (evt) {
+    map.setCenter(evt.target.getPosition());
+    openBubble(
+      evt.target.getPosition(), evt.target.content);
+  }, false);
+
+ map.addObject(group);
+ var search = new H.places.Search(platform.getPlacesService()),
+            searchResult, error;
+//Step 3: make the map interactive
+// MapEvents enables the event system
+// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+// Create the default UI components
+var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+var strip = new H.geo.Strip();
+
+var bubble;
+function openBubble(position, text){
+  if(!bubble){
+    bubble =  new H.ui.InfoBubble(
+      position,
+      // The FO property holds the province name.
+      {content: text});
+    ui.addBubble(bubble);
+  } else {
+    bubble.setPosition(position);
+    bubble.setContent(text);
+    bubble.open();
+  }
+}
+ 
 function processJSON(json){
 	var obj = json;
     //var obj = JSON.parse(json);
@@ -85,28 +131,6 @@ function processJSON(json){
  */
 function makeMap(points, fullTrip){
 //Step 1: initialize communication with the platform
-var platform = new H.service.Platform({
-  app_id: 'coZYlKFfMv8P9SZZj5AF',
-  app_code: 'b9mg-A1AaGwMKGdcIFPOJg',
-  useCIT: true,
-  useHTTPS: true
-});
-var defaultLayers = platform.createDefaultLayers();
-
-//Step 2: initialize a map  - not specificing a location will give a whole world view.
-var map = new H.Map(document.getElementById('map'),
-  defaultLayers.normal.map);
-
-//Step 3: make the map interactive
-// MapEvents enables the event system
-// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
-// Create the default UI components
-var ui = H.ui.UI.createDefault(map, defaultLayers);
-
-var strip = new H.geo.Strip();
-
 
 //var points = json;//processJSON(json);
 for (var i = 0; i < points[0].length; i++){
@@ -122,14 +146,59 @@ map.addObject(polyline);
 // Zoom the map to make sure the whole polyline is visible:
 map.setViewBounds(polyline.getBounds());
 
+var params = {
+	    // Plain text search for places with the word "hotel"
+        // associated with them:
+	      'q': 'hotel',
+	    //  Search in the Chinatown district in San Francisco:
+	      'at': '37.7942,-122.4070',
+		  'size': '3'
+	    };
+
 for (var i = 0; i < fullTrip.length; i++){
-	for (var j = 0; j < fullTrip[i].length; j++){
-		//console.log(fullTrip[i]);
-		var t = new H.map.Marker(fullTrip[i][j][0], fullTrip[i][j][1]);
-		map.addObject(t);
+	for (var j = 0; j < fullTrip[i].length - 1; j++){
+		console.log(fullTrip[i][j][0]);
+		console.log(fullTrip[i][j][1]);
+		if (j != 2){
+			params.q = 'restaurant';
+		}
+		else{
+			params.q = 'hotel';
+		}
+		params.at = fullTrip[i][j][0] + "," + fullTrip[i][j][1];
+		search.request(params, {}, onResult, onError);
+		//var p = new H.geo.Point(fullTrip[i][j][0], fullTrip[i][j][1]);
+		//var t = new H.map.Marker(p);
+		//map.addObject(t);
 	}
 }
 
+        // Run a search request with parameters, headers (empty), and
+        // callback functions:
+	    
+
+}
+
+// Define a callback function to handle data on success:
+function onResult(data) {
+	addPlacesToMap(data.results);
+}
+
+// Define a callback function to handle errors:
+function onError(data) {
+	error = data;
+}
+
+// This function adds markers to the map, indicating each of
+// the located places:
+function addPlacesToMap(result) {
+  group.addObjects(result.items.map(function (place) {
+	var marker = new H.map.Marker({lat: place.position[0],
+		lng: place.position[1]})
+		marker.content = '<div style="font-size: 10px" ><h3>' + place.title +
+      '</h3><h4>' + place.category.title + '</h4>' + place.vicinity + '</div>';
+	return marker;
+  }));
 }
 
 function calculateFullTrip(data){
@@ -138,7 +207,8 @@ function calculateFullTrip(data){
 	while (waypoint < data[0].length){
 		var day = calculateRouteForDay(10, data[0], data[1], data[2], waypoint);
 		totalRoute.push(day);
-		waypoint++;
+		waypoint = day[3];
+		//waypoint++;
 	}
 	console.log(totalRoute);
 	return totalRoute;
@@ -152,7 +222,7 @@ function calculateRouteForDay(timePerDay, latitudes, longitudes, timeLengths, wa
 	var lunchPointSet = false;
 	var dinnerPointSet = false;
 	var hotelPointSet = false;
-	var waypoint = 0;
+	//var waypoint = 0;
 	var traveled = 0;
 	while (traveled < timePerDayInSeconds){
 		traveled += timeLengths[waypoint];
