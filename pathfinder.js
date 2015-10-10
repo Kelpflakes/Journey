@@ -1,12 +1,13 @@
 var http = require("https");
 
 module.exports = {
-    coder: function (a, callback){
-        var mystring = a;
+    route: function (coorA, coorB, callback){
+        //console.log(coorA);
+        //console.log(coorB);
+        
         var buffer = "", 
                 data;
-        mystring.replace(/ /g , "%20");
-        url = "https://geocoder.cit.api.here.com/6.2/geocode.json?searchtext=" + mystring + "&app_id=coZYlKFfMv8P9SZZj5AF&app_code=b9mg-A1AaGwMKGdcIFPOJg&gen=8";
+        url = "https://route.cit.api.here.com/routing/7.2/calculateroute.json?waypoint0="+coorA[0].Latitude+"%2C"+coorA[0].Longitude+"&waypoint1="+coorB[0].Latitude+"%2C"+coorB[0].Longitude+"&mode=fastest%3Bcar%3Btraffic%3Aenabled&app_id=coZYlKFfMv8P9SZZj5AF&app_code=b9mg-A1AaGwMKGdcIFPOJg&departure=now";
 
         // get is a simple wrapper for request()
         // which sets the http method to GET
@@ -25,9 +26,9 @@ module.exports = {
                 //console.log(buffer);
                 //console.log("\n");
                 var response = JSON.parse(buffer);
-                //console.log(response.Response.View[0].Result[0].Location.NavigationPosition);
+                //console.log(response);
                 callback(
-                    response.Response.View[0].Result[0].Location.NavigationPosition
+                    response
                 );
             }); 
         }); 
