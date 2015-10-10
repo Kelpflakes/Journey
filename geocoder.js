@@ -27,7 +27,7 @@ module.exports = {
                 var response = JSON.parse(buffer);
                 console.log(response.Response.View[0].Result[0].Location.NavigationPosition);
                 callback(
-                    response.Response.View[0].Result.NavigationPosition
+                    response.Response.View[0].Result[0].Location.NavigationPosition
                 );
             }); 
         }); 

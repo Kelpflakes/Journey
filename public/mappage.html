@@ -19,8 +19,9 @@
   <div id="map" style="width: 100%; height: 800px; background: grey" />
   <script  type="text/javascript" charset="UTF-8" >
     
-var json;
-      
+
+
+
 $.ajax({
     url: "../getpath",
     //type: "get",
@@ -34,16 +35,20 @@ $.ajax({
 
     success: function(data) {
       //json = JSON.parse(data);
-        json = data;
-      console.log(data);
+        //json = data;
+      //console.log(data);
       console.log('process success');
-        console.log(json);
+        //console.log(json);
+		processedJSON = processJSON(data);
+		fullTrip = calculateFullTrip(processedJSON)
+		makeMap(processedJSON, fullTrip);
    },
 
     error: function() {
       console.log('process error');
     }
 });
+
 /**
  * Moves the map to display over Berlin
  *
@@ -58,14 +63,17 @@ function moveMapToBerlin(map){
 function processJSON(json){
 	var obj = json;
     //var obj = JSON.parse(json);
-	var maneuver = obj.route[0].leg.maneuver;
+	//console.log(obj.route);
+	//console.log(obj.route[0]);
+	//console.log(obj.route[0].leg[0]);
+	var maneuver = obj.response.route[0].leg[0].maneuver;
 	var data = [[], [], []];
 	for (var i = 0; i < maneuver.length; i++){
 		data[0].push(maneuver[i].position.latitude);
 		data[1].push(maneuver[i].position.longitude);
 		data[2].push(maneuver[i].travelTime);
 	}
-    console.log(data);
+    //console.log(data);
 	return data;
 }
 
@@ -75,7 +83,7 @@ function processJSON(json){
 /**
  * Boilerplate map initialization code starts below:
  */
-
+function makeMap(points, fullTrip){
 //Step 1: initialize communication with the platform
 var platform = new H.service.Platform({
   app_id: 'coZYlKFfMv8P9SZZj5AF',
@@ -99,7 +107,8 @@ var ui = H.ui.UI.createDefault(map, defaultLayers);
 
 var strip = new H.geo.Strip();
 
-var points = processJSON(json);
+
+//var points = json;//processJSON(json);
 for (var i = 0; i < points[0].length; i++){
 	var p = new H.geo.Point(points[0][i], points[1][i]);
 	strip.pushPoint(p);
@@ -112,6 +121,59 @@ map.addObject(polyline);
 
 // Zoom the map to make sure the whole polyline is visible:
 map.setViewBounds(polyline.getBounds());
+
+for (var i = 0; i < fullTrip.length; i++){
+	for (var j = 0; j < fullTrip[i].length; j++){
+		//console.log(fullTrip[i]);
+		var t = new H.map.Marker(fullTrip[i][j][0], fullTrip[i][j][1]);
+		map.addObject(t);
+	}
+}
+
+}
+
+function calculateFullTrip(data){
+	var totalRoute = [];
+	var waypoint = 0;
+	while (waypoint < data[0].length){
+		var day = calculateRouteForDay(10, data[0], data[1], data[2], waypoint);
+		totalRoute.push(day);
+		waypoint++;
+	}
+	console.log(totalRoute);
+	return totalRoute;
+}
+
+function calculateRouteForDay(timePerDay, latitudes, longitudes, timeLengths, waypoint){
+	var data = [0, 0, 0, 0];
+	var timePerDayInSeconds = timePerDay * 3600;
+	var lunchPoint = timePerDayInSeconds / 3;
+	var dinnerPoint = lunchPoint * 2;
+	var lunchPointSet = false;
+	var dinnerPointSet = false;
+	var hotelPointSet = false;
+	var waypoint = 0;
+	var traveled = 0;
+	while (traveled < timePerDayInSeconds){
+		traveled += timeLengths[waypoint];
+		waypoint++;
+		if (traveled >= lunchPoint && !lunchPointSet){
+			lunchPointSet = true;
+			data[0] = [latitudes[waypoint], longitudes[waypoint]];
+		}
+		else if (traveled >= dinnerPoint && !dinnerPointSet){
+			dinnerPointSet = true;
+			data[1] = [latitudes[waypoint], longitudes[waypoint]];
+		}
+		else if (traveled >= timePerDayInSeconds && !hotelPointSet){
+			hotelPointSet = true;
+			data[2] = [latitudes[waypoint], longitudes[waypoint]];
+		}
+	}
+	data[3] = waypoint;
+	return data;
+}
+
 // Now use the map as required...
 //moveMapToBerlin(map);
   </script>

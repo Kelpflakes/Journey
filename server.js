@@ -9,7 +9,7 @@ var express = require("express"),
     dataE,
     time,
     path;
-
+var resm;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -27,14 +27,11 @@ router.post("/set", function(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     geocoder.coder(start, setS);
     geocoder.coder(end, setE);
-    res.redirect("/mappage.html");
+	resm = res;
 });
 
 router.get("/getpath", function(req, res){
-        console.log(path);
-        while (path === null){
-            
-        }
+        //console.log(path);
         console.log("path");
         res.send(path);
     });
@@ -43,9 +40,14 @@ router.get("/getpath", function(req, res){
 
 var setS = function(data){
     console.log("setS");
+	 console.log(data);
+	
     dataS = data;
+	console.log(dataS);
+	console.log(dataE);
     if (dataE != null){
         pathfinder.route(dataS, dataE, pathfinding);
+		console.log("BGFG1");
         dataE = null;
         dataS = null;
     }
@@ -54,9 +56,14 @@ var setS = function(data){
 var setE = function(data){
     
     console.log("setE");
+	 console.log(data);
+	
     dataE = data;
+	console.log(dataS);
+	console.log(dataE);
     if (dataS != null){
         pathfinder.route(dataS, dataE, pathfinding);
+		console.log("BGFG2");
         dataE = null;
         dataS = null;
     }
@@ -64,6 +71,8 @@ var setE = function(data){
 
 var pathfinding = function(data){
     path = data;
+	console.log("Redirect");
+	resm.redirect("/mappage.html");
     //console.log(path);
     /*path = path.replace(/\\n/g, "\\n")  
                .replace(/\\'/g, "\\'")
