@@ -14,24 +14,50 @@
     src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
   <script type="text/javascript" charset="UTF-8"
     src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
-
 </head>
 <body>
   <div id="map" style="width: 100%; height: 800px; background: grey" />
   <script  type="text/javascript" charset="UTF-8" >
     
+var json;
+      
+$.ajax({
+    url: "../getpath",
+    //type: "get",
+    //dataType: "json",
+    //contentType: "application/json",
+    //cache: false,
+    complete: function() {
+      //called when complete
+      console.log('process complete');
+    },
+
+    success: function(data) {
+      //json = JSON.parse(data);
+        json = data;
+      console.log(data);
+      console.log('process success');
+        console.log(json);
+   },
+
+    error: function() {
+      console.log('process error');
+    }
+});
 /**
  * Moves the map to display over Berlin
  *
  * @param  {H.Map} map      A HERE Map instance within the application
  */
+  
 function moveMapToBerlin(map){
   map.setCenter({lat:52.5159, lng:13.3777});
   map.setZoom(14);
 }
 
 function processJSON(json){
-	var obj = JSON.parse(json);
+	var obj = json;
+    //var obj = JSON.parse(json);
 	var maneuver = obj.route[0].leg.maneuver;
 	var data = [[], [], []];
 	for (var i = 0; i < maneuver.length; i++){
@@ -39,6 +65,7 @@ function processJSON(json){
 		data[1].push(maneuver[i].position.longitude);
 		data[2].push(maneuver[i].travelTime);
 	}
+    console.log(data);
 	return data;
 }
 

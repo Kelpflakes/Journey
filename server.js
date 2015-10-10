@@ -19,28 +19,32 @@ router.get("/", function(req, res){
 });
 
 router.post("/set", function(req, res) {  
-    console.log("plz");
     var start = req.body.start;
     var end = req.body.end;
-    console.log(start + " " + end);
+    //console.log(start + " " + end);
     time = req.body.time;
     res.contentType('application/json');
     res.setHeader("Access-Control-Allow-Origin", "*");
     geocoder.coder(start, setS);
     geocoder.coder(end, setE);
-    res.redirect("/mappage");
+    res.redirect("/mappage.html");
 });
 
-router.get("/mappage", function(req, res){
-    res.sendFile(__dirname + '/public/mappage.html');    
-});
+router.get("/getpath", function(req, res){
+        console.log(path);
+        while (path === null){
+            
+        }
+        console.log("path");
+        res.send(path);
+    });
 
     
 
 var setS = function(data){
+    console.log("setS");
     dataS = data;
     if (dataE != null){
-        console.log("Yolo1");
         pathfinder.route(dataS, dataE, pathfinding);
         dataE = null;
         dataS = null;
@@ -48,10 +52,10 @@ var setS = function(data){
 }
 
 var setE = function(data){
+    
+    console.log("setE");
     dataE = data;
     if (dataS != null){
-        
-        console.log("Yolo2");
         pathfinder.route(dataS, dataE, pathfinding);
         dataE = null;
         dataS = null;
@@ -60,7 +64,18 @@ var setE = function(data){
 
 var pathfinding = function(data){
     path = data;
-    console.log(path);
+    //console.log(path);
+    /*path = path.replace(/\\n/g, "\\n")  
+               .replace(/\\'/g, "\\'")
+               .replace(/\\"/g, '\\"')
+               .replace(/\\&/g, "\\&")
+               .replace(/\\r/g, "\\r")
+               .replace(/\\t/g, "\\t")
+               .replace(/\\b/g, "\\b")
+               .replace(/\\f/g, "\\f");
+    path = path.replace(/[\u0000-\u0019]+/g,""); 
+    path = JSON.parse(path);*/
+    //console.log(path);
 }
 
 app.use("/", router);
