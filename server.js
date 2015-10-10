@@ -12,6 +12,7 @@ var express = require("express"),
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 router.get("/", function(req, res){
     res.sendFile(__dirname + '/public/inputpage.html');
@@ -23,8 +24,8 @@ router.post("/set", function(req, res) {
     var end = req.body.end;
     console.log(start + " " + end);
     time = req.body.time;
-    //res.contentType('application/json');
-    //res.setHeader("Access-Control-Allow-Origin", "*");
+    res.contentType('application/json');
+    res.setHeader("Access-Control-Allow-Origin", "*");
     geocoder.coder(start, setS);
     geocoder.coder(end, setE);
     res.redirect("/mappage");
@@ -63,6 +64,5 @@ var pathfinding = function(data){
 }
 
 app.use("/", router);
-app.use(express.static('public'));
 app.listen(port);
 console.log('Magic happens on port ' + port);

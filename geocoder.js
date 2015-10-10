@@ -23,12 +23,12 @@ module.exports = {
             response.on("end", function (err) {
                 // finished transferring data
                 // dump the raw data
-                //console.log(buffer);
+                console.log(buffer);
                 //console.log("\n");
                 var response = JSON.parse(buffer);
                 //console.log(response.Response.View[0].Result[0].Location.NavigationPosition);
                 callback(
-                    response.Response.View[0].Result[0].Location.NavigationPosition
+                    response.Response.View[0].Result.NavigationPosition
                 );
             }); 
         }); 
