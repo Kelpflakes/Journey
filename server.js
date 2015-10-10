@@ -1,4 +1,5 @@
 var express = require("express"),
+    geocoder = require("./geocoder.js"),
     app = express(),
     router = express.Router(),
     port = process.env.PORT || 8080;
@@ -13,7 +14,10 @@ router.get('/test', function(req, res) {
     var start = req.query.start;
     var end = req.query.end;
     var time = req.query.time;
-    res.send(start + ' ' + end + ' ' + time);
+    var dataS = geocoder.coder(start);
+    var dataE = geocoder.coder(end);
+    
+    res.send(data);
 });
 
 
