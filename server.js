@@ -19,10 +19,13 @@ router.get("/", function(req, res){
     //res.sendFile(__dirname + '/public/mappage.html');
 //});
 
-router.get('/test', function(req, res) {     
+router.get('/mappage', function(req, res) {  
+    console.log("plz");
     var start = req.query.start;
     var end = req.query.end;
     time = req.query.time;
+    res.contentType('application/json');
+    res.setHeader("Access-Control-Allow-Origin", "*");
     geocoder.coder(start, setS, req, res);
     geocoder.coder(end, setE, req, res);
     
@@ -53,7 +56,7 @@ var setE = function(data, req, res){
 
 var pathfinding = function(data, req, res){
     path = data;
-    console.log(path);
+    //console.log(path);
     res.json(data);
 }
 

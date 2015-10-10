@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+  <meta name="viewport" content="initial-scale=1.0, width=device-width, height=device-height" />
   <link rel="stylesheet" type="text/css"
     href="https://js.api.here.com/v3/3.0/mapsjs-ui.css" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+  <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
   <script type="text/javascript" charset="UTF-8"
     src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
   <script type="text/javascript" charset="UTF-8"
@@ -12,10 +14,17 @@
     src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
   <script type="text/javascript" charset="UTF-8"
     src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
-
+  <script type="text/javascript">
+      $.ajax({
+            url: '../server.js',
+            console.log("testing");
+            complete: function(data) {
+            console.log(data);
+            }
+      });</script>
 </head>
 <body>
-  <div id="map" style="width: 100%; height: 400px; background: grey" />
+  <div id="map" style="width: 100%; height: 100%; background: grey" />
   <script  type="text/javascript" charset="UTF-8" >
     
 /**
