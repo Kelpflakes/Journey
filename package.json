@@ -1,0 +1,17 @@
+{
+    "name": "journey",
+    "version": "1.0.0",
+    "description": "roadtrip advisor",
+    "main": "server.js",
+    "dependencies": {
+    "express": "^4.13.3"
+    },
+    "devDependencies": {},
+    "scripts": {},
+    "repository": {
+    "type": "git",
+    "url": "Journey"
+    },
+    "author": "Tianrui Chen and Adam Victor",
+    "license": "ISC"
+}
