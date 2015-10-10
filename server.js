@@ -17,52 +17,49 @@ router.get("/", function(req, res){
     res.sendFile(__dirname + '/public/inputpage.html');
 });
 
-app.route('/mappage')
-    .get(function(req, res) { 
-        console.log("mapping");
-        res.sendFile(__dirname + '/public/mappage.html');
-    })
-    .post(function(req, res) {  
-        console.log("plz");
-        var start = req.body.start;
-        var end = req.body.end;
-        time = req.body.time;
-        res.contentType('application/json');
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        geocoder.coder(start, setS, req, res);
-        geocoder.coder(end, setE, req, res);
+router.post("/set", function(req, res) {  
+    console.log("plz");
+    var start = req.body.start;
+    var end = req.body.end;
+    console.log(start + " " + end);
+    time = req.body.time;
+    //res.contentType('application/json');
+    //res.setHeader("Access-Control-Allow-Origin", "*");
+    geocoder.coder(start, setS);
+    geocoder.coder(end, setE);
+    res.redirect("/mappage");
+});
 
-    });
+router.get("/mappage", function(req, res){
+    res.sendFile(__dirname + '/public/mappage.html');    
+});
 
     
 
-var setS = function(data, req, res){
+var setS = function(data){
     dataS = data;
     if (dataE != null){
         console.log("Yolo1");
-        pathfinder.route(dataS, dataE, pathfinding, req, res);
+        pathfinder.route(dataS, dataE, pathfinding);
         dataE = null;
         dataS = null;
     }
 }
 
-var setE = function(data, req, res){
+var setE = function(data){
     dataE = data;
-    //console.log(dataS);
-    //console.log(dataE);
     if (dataS != null){
         
         console.log("Yolo2");
-        pathfinder.route(dataS, dataE, pathfinding, req, res);
+        pathfinder.route(dataS, dataE, pathfinding);
         dataE = null;
         dataS = null;
     }
 }
 
-var pathfinding = function(data, req, res){
+var pathfinding = function(data){
     path = data;
     console.log(path);
-    res.json(data);
 }
 
 app.use("/", router);
