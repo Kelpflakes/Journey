@@ -1,6 +1,7 @@
 var express = require("express"),
     geocoder = require("./geocoder.js"),
     pathfinder = require("./pathfinder.js"),
+    bodyParser = require('body-parser'),
     app = express(),
     router = express.Router(),
     port = process.env.PORT || 8080,
@@ -9,27 +10,31 @@ var express = require("express"),
     time,
     path;
 
-app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 router.get("/", function(req, res){
     res.sendFile(__dirname + '/public/inputpage.html');
 });
 
-//router.get('/test', function(req, res) { 
-    //res.sendFile(__dirname + '/public/mappage.html');
-//});
+app.route('/mappage')
+    .get(function(req, res) { 
+        console.log("mapping");
+        res.sendFile(__dirname + '/public/mappage.html');
+    })
+    .post(function(req, res) {  
+        console.log("plz");
+        var start = req.body.start;
+        var end = req.body.end;
+        time = req.body.time;
+        res.contentType('application/json');
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        geocoder.coder(start, setS, req, res);
+        geocoder.coder(end, setE, req, res);
 
-router.get('/mappage', function(req, res) {  
-    console.log("plz");
-    var start = req.query.start;
-    var end = req.query.end;
-    time = req.query.time;
-    res.contentType('application/json');
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    geocoder.coder(start, setS, req, res);
-    geocoder.coder(end, setE, req, res);
+    });
+
     
-});
 
 var setS = function(data, req, res){
     dataS = data;
@@ -56,10 +61,11 @@ var setE = function(data, req, res){
 
 var pathfinding = function(data, req, res){
     path = data;
-    //console.log(path);
+    console.log(path);
     res.json(data);
 }
 
-app.use('/', router);
+app.use("/", router);
+app.use(express.static('public'));
 app.listen(port);
 console.log('Magic happens on port ' + port);
