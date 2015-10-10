@@ -17,7 +17,7 @@ router.get('/test', function(req, res) {
     var dataS = geocoder.coder(start);
     var dataE = geocoder.coder(end);
     
-    res.send(data);
+    //res.send(dataS.DisplayPosition);
 });
 
 

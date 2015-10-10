@@ -2,7 +2,9 @@ var http = require("https");
 
 module.exports = {
     coder: function (a){
-        url = "https://geocoder.cit.api.here.com/6.2/geocode.json?searchtext=" + a + "&app_id=coZYlKFfMv8P9SZZj5AF&app_code=b9mg-A1AaGwMKGdcIFPOJg&gen=8";
+        var mystring = a;
+        mystring.replace(/ /g , "%20");
+        url = "https://geocoder.cit.api.here.com/6.2/geocode.json?searchtext=" + mystring + "&app_id=coZYlKFfMv8P9SZZj5AF&app_code=b9mg-A1AaGwMKGdcIFPOJg&gen=8";
 
         // get is a simple wrapper for request()
         // which sets the http method to GET
