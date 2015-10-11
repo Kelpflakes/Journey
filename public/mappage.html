@@ -40,6 +40,7 @@ var pathSet = null;
 var timePerDay = null;
 var finalDestinationLatitude = null;
 var finalDestinationLongitude = null;
+$('#back').prop('disabled', true);
 $( "button" ).click(function() {
 	var b = $(this).context;
 	console.log(b);
@@ -83,9 +84,34 @@ $( "button" ).click(function() {
             });
     }
 });
+
+$( "#list" ).click(function(event) {
+		//console.log(event);
+		var target = event.target;
+		if (target.nodeName == "DIV" && target.firstChild != null){
+		target = target.firstChild;
+		}
+		else{
+			if (event.target.previousSibling != null){
+				target = event.target.previousSibling;
+			}
+			if (event.target.previousSibling != null){
+				target = event.target.previousSibling;
+			}
+		}
+       //console.log(target.innerText);
+	   //console.log(dataContentArray[target.innerText]);
+	   
+	   var foundData = dataContentArray[target.innerText];
+	   if (foundData != null){
+			map.setCenter(new H.geo.Point(foundData.position[0], foundData.position[1]));
+	   }
+	   //console.log($(this));
+    });
 var loaded = 0;
 var maxLoaded = 5;
 var dataArray = [];
+var dataContentArray = {};
 var page = 0;
 $.ajax({
     url: "../gettime",
@@ -382,7 +408,8 @@ function addPlacesToMap(result) {
 		marker.content = '<div style="font-size: 10px" ><h3>' + place.title +
       '</h3><h4>' + place.category.title + '</h4>' + place.vicinity + '</div>';
 	  //marker.setData(day);
-	  dataArray.push("<li>"+ marker.content + "</li>");
+	  dataArray.push("<li id=" + dataArray.length + ">" + marker.content + "</li>");
+	  dataContentArray[place.title] = place;
 	  if (loaded < maxLoaded){
       $("#list").append("<li>"+ marker.content + "</li>");
 	  loaded++;
