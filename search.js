@@ -7,7 +7,7 @@ module.exports = {
         //console.log(coorB);
         
         var buffer = "";
-        url = "https://places.demo.api.here.com/places/v1/suggest?at=52.5159%2C13.3777&q=" + term + "&app_id=coZYlKFfMv8P9SZZj5AF&app_code=b9mg-A1AaGwMKGdcIFPOJg";
+        url = "https://places.demo.api.here.com/places/v1/suggest?at=52.5159%2C13.3777&q=" + term + "&app_id=etW0rzf9MTtJGKg3JUzE&app_code=D_PBDcI7Ytka3wjH5pVHOA";
 
         // get is a simple wrapper for request()
         // which sets the http method to GET

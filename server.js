@@ -74,8 +74,10 @@ router.get("/check", function(req, res){
 });
 
 var setS = function(data){
-	if (data == null){
+	
+	if (data == null && res2 != null){
 		res2.redirect("/inputpage.html");
+		res2 = null;
 	}
     console.log("setS");
 	 console.log(data);
@@ -92,8 +94,10 @@ var setS = function(data){
 }
 
 var setE = function(data){
-    if (data == null){
+	
+    if (data == null && res2 != null){
 		res2.redirect("/inputpage.html");
+		res2 = null;
 	}
     console.log("setE");
 	 console.log(data);
