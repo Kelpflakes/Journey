@@ -72,6 +72,16 @@ $( "button" ).click(function() {
 			loadPlaces(page);
 		}
 	}
+    if (b.id == "return"){
+            $.ajax({
+                //type: 'get',
+                url: '../return',
+                success: function (data) {
+                    console.log('process complete');
+                    window.location.href = "/";
+                }
+            });
+    }
 });
 var loaded = 0;
 var maxLoaded = 5;

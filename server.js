@@ -63,7 +63,10 @@ router.get("/getsuggestions", function(req, res){
 	
 });   
 
-
+router.get("/return", function(req, res){
+    console.log("returned");
+    res.redirect("/inputpage.html");
+});
 
 var setS = function(data){
 	if (data == null){
