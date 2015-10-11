@@ -23,8 +23,37 @@
   <div id="map" style="width: 100%; height: 800px; background: grey" />
   <script  type="text/javascript" charset="UTF-8" >
     
+var pathSet = null;
+var timePerDay = null;
+$.ajax({
+    url: "../gettime",
+    //type: "get",
+    //dataType: "json",
+    //contentType: "application/json",
+    //cache: false,
+    complete: function() {
+      //called when complete
+      console.log('process complete');
+    },
 
+    success: function(data) {
+      //json = JSON.parse(data);
+        //json = data;
+      //console.log(data);
+      console.log('process success');
+        //console.log(json);
+		timePerDay = data;
+		if (pathSet != null){
+		processedJSON = processJSON(pathSet);
+		fullTrip = calculateFullTrip(processedJSON)
+		makeMap(processedJSON, fullTrip);
+		}
+   },
 
+    error: function() {
+      console.log('process error');
+    }
+});
 
 $.ajax({
     url: "../getpath",
@@ -43,15 +72,20 @@ $.ajax({
       //console.log(data);
       console.log('process success');
         //console.log(json);
+		pathSet = data;
+		if (timePerDay != null){
 		processedJSON = processJSON(data);
 		fullTrip = calculateFullTrip(processedJSON)
 		makeMap(processedJSON, fullTrip);
+		}
    },
 
     error: function() {
       console.log('process error');
     }
 });
+
+
 
 /**
  * Moves the map to display over Berlin
@@ -112,6 +146,7 @@ function processJSON(json){
 	//console.log(obj.route);
 	//console.log(obj.route[0]);
 	//console.log(obj.route[0].leg[0]);
+	//timePerDay = obj.response.metaInfo;
 	var maneuver = obj.response.route[0].leg[0].maneuver;
 	var data = [[], [], []];
 	for (var i = 0; i < maneuver.length; i++){
@@ -124,7 +159,14 @@ function processJSON(json){
 }
 
 
-
+var params = {
+	    // Plain text search for places with the word "hotel"
+        // associated with them:
+	      'q': 'hotel',
+	    //  Search in the Chinatown district in San Francisco:
+	      'at': '37.7942,-122.4070',
+		  'size': '3'
+	    };
 
 /**
  * Boilerplate map initialization code starts below:
@@ -146,15 +188,7 @@ map.addObject(polyline);
 // Zoom the map to make sure the whole polyline is visible:
 map.setViewBounds(polyline.getBounds());
 
-var params = {
-	    // Plain text search for places with the word "hotel"
-        // associated with them:
-	      'q': 'hotel',
-	    //  Search in the Chinatown district in San Francisco:
-	      'at': '37.7942,-122.4070',
-		  'size': '3'
-	    };
-
+/*
 for (var i = 0; i < fullTrip.length; i++){
 	for (var j = 0; j < fullTrip[i].length - 1; j++){
 		console.log(fullTrip[i][j][0]);
@@ -167,16 +201,97 @@ for (var i = 0; i < fullTrip.length; i++){
 		}
 		params.at = fullTrip[i][j][0] + "," + fullTrip[i][j][1];
 		search.request(params, {}, onResult, onError);
+
 		//var p = new H.geo.Point(fullTrip[i][j][0], fullTrip[i][j][1]);
 		//var t = new H.map.Marker(p);
 		//map.addObject(t);
 	}
 }
-
+*/
         // Run a search request with parameters, headers (empty), and
         // callback functions:
 	    
 
+}
+
+var nextPartLength = 0;
+var totalTraveledAlong = 0;
+function lerp(initialPoint, finalPoint){
+	return initialPoint + (finalPoint - initialPoint) * (totalTraveledAlong / (totalTraveledAlong + nextPartLength))
+}	
+		
+function calculateRouteForDay(timePerDay, latitudes, longitudes, timeLengths, waypoint){
+	//var data = [0, 0, 0, 0];
+	var timePerDayInSeconds = timePerDay * 3600;
+	var lunchPoint = timePerDayInSeconds / 3;
+	var dinnerPoint = lunchPoint * 2;
+	var lunchPointSet = false;
+	var dinnerPointSet = false;
+	var hotelPointSet = false;
+	var nextSignificantTime = lunchPoint;
+	//var waypoint = 0;
+	var traveled = 0;
+	while (traveled < timePerDayInSeconds){
+		var nextDistance;
+		if (nextPartLength > 0)
+			nextDistance = nextPartLength;
+		else
+			nextDistance = timeLengths[waypoint];
+		
+		if (traveled + nextDistance > nextSignificantTime){
+			var actuallyTraveled = nextSignificantTime - traveled;
+			nextPartLength = nextDistance - actuallyTraveled;
+			traveled += actuallyTraveled;
+			totalTraveledAlong += actuallyTraveled;
+			params.at = lerp(latitudes[waypoint], latitudes[waypoint + 1]) + "," + lerp(longitudes[waypoint], longitudes[waypoint + 1]);
+		}
+		else{
+			traveled += nextDistance;
+			nextPartLength = 0;
+			totalTraveledAlong = 0;
+			waypoint++;
+			params.at = latitudes[waypoint] + "," + longitudes[waypoint];
+		}
+		
+			if (traveled >= nextSignificantTime){
+				if (!lunchPointSet){
+					lunchPointSet = true;
+					nextSignificantTime = dinnerPoint;
+					params.q = 'restaurant';
+				}
+				else if (!dinnerPointSet){
+					dinnerPointSet = true;
+					nextSignificantTime = timePerDayInSeconds;
+					params.q = 'restaurant';
+				}
+				else if (!hotelPointSet){
+					hotelPointSet = true;
+					params.q = 'hotel';
+					//nextSignificantTime = dinnerPoint;
+				}
+				search.request(params, {}, onResult, onError);
+			}
+		}
+		/*
+		traveled += timeLengths[waypoint];
+		waypoint++;
+		if (traveled >= lunchPoint && !lunchPointSet){
+			lunchPointSet = true;
+			data[0] = [latitudes[waypoint], longitudes[waypoint]];
+		}
+		else if (traveled >= dinnerPoint && !dinnerPointSet){
+			dinnerPointSet = true;
+			data[1] = [latitudes[waypoint], longitudes[waypoint]];
+		}
+		else if (traveled >= timePerDayInSeconds && !hotelPointSet){
+			hotelPointSet = true;
+			data[2] = [latitudes[waypoint], longitudes[waypoint]];
+		}
+	}
+	data[3] = waypoint;
+	return data;
+	*/
+	return waypoint;
 }
 
 // Define a callback function to handle data on success:
@@ -202,10 +317,20 @@ function addPlacesToMap(result) {
 }
 
 function calculateFullTrip(data){
+	var waypoint = 0;
+	while (waypoint < data[0].length){
+		waypoint = calculateRouteForDay(timePerDay, data[0], data[1], data[2], waypoint);
+		//totalRoute.push(day);
+		//waypoint++;
+	}
+	return data;
+}
+/*
+function calculateFullTrip(data){
 	var totalRoute = [];
 	var waypoint = 0;
 	while (waypoint < data[0].length){
-		var day = calculateRouteForDay(10, data[0], data[1], data[2], waypoint);
+		var day = calculateRouteForDay(timePerDay, data[0], data[1], data[2], waypoint);
 		totalRoute.push(day);
 		waypoint = day[3];
 		//waypoint++;
@@ -213,7 +338,8 @@ function calculateFullTrip(data){
 	console.log(totalRoute);
 	return totalRoute;
 }
-
+*/
+/*
 function calculateRouteForDay(timePerDay, latitudes, longitudes, timeLengths, waypoint){
 	var data = [0, 0, 0, 0];
 	var timePerDayInSeconds = timePerDay * 3600;
@@ -243,7 +369,7 @@ function calculateRouteForDay(timePerDay, latitudes, longitudes, timeLengths, wa
 	data[3] = waypoint;
 	return data;
 }
-
+*/
 // Now use the map as required...
 //moveMapToBerlin(map);
   </script>

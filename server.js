@@ -35,7 +35,11 @@ router.get("/getpath", function(req, res){
         console.log("path");
         res.send(path);
     });
-
+router.get("/gettime", function(req, res){
+        //console.log(path);
+        console.log("time");
+        res.send(time);
+    });
     
 
 var setS = function(data){
