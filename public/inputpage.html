@@ -99,7 +99,7 @@ $(document).ready(function() {
 							</datalist>
                         </div>
                         <div id="form-3">
-                            <input type="text" id="time" name="time" class = "textbox" placeholder="Driving Time per Day">
+                            <input type="text" id="time" name="time" class = "textbox" placeholder="Hours Driven per Day">
                         </div>
                         <div id="form-4">
                             <input type="submit" id="submit" value="Submit" class = "submit" onClick="return empty()">
@@ -107,6 +107,13 @@ $(document).ready(function() {
                     </form>
                 </div>
             </div></div>
+            <button id="home">About Us</button>
         </body>
     </div>
+    <script  type="text/javascript" charset="UTF-8" >
+        var button = document.getElementById("home");
+        button.onclick = function(){
+          window.location.href = "/aboutus.html";
+        }
+    </script>
 </html>

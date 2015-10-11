@@ -118,3 +118,14 @@ input.submit{
     font-size: 16px;
 }
 
+#home{
+    position:absolute;
+    font-size: 2em;
+    color:azure;
+    text-shadow: 2px 2px #000000;
+    bottom: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+}
+
