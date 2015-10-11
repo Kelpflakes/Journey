@@ -49,10 +49,10 @@ router.get("/getsuggestions", function(req, res){
 	//console.log(req);
 	search.search(req.query.term, setSearchResults);
 	suggestedTerm = req.query.term;
-	console.log(suggestions);
+	//console.log(suggestions);
 	if (suggestions != null){
 		res.send(suggestions);
-		console.log("Sent suggestions");
+		//console.log("Sent suggestions");
 	}
 	
 });   
@@ -89,7 +89,7 @@ var setE = function(data){
 }
 
 var setSearchResults = function(data){
-	console.log("This is a test");
+	//console.log("This is a test");
 	if (data != null)
 	suggestions = data;
 }
