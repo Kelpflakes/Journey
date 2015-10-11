@@ -1,6 +1,7 @@
 var express = require("express"),
     geocoder = require("./geocoder.js"),
     pathfinder = require("./pathfinder.js"),
+	search = require("./search.js"),
     bodyParser = require('body-parser'),
     app = express(),
     router = express.Router(),
@@ -9,7 +10,8 @@ var express = require("express"),
     dataE,
     time,
     path,
-	suggestions;
+	suggestions,
+	suggestedTerm;
 var resm;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,10 +44,18 @@ router.get("/gettime", function(req, res){
         res.send(time);
     });
 
-router.get("/getsuggestions", function(req, res)){
-	req.term;
-	res.send(suggestions);
-}    
+router.get("/getsuggestions", function(req, res){
+	
+	//console.log(req);
+	search.search(req.query.term, setSearchResults);
+	suggestedTerm = req.query.term;
+	console.log(suggestions);
+	if (suggestions != null){
+		res.send(suggestions);
+		console.log("Sent suggestions");
+	}
+	
+});   
 
 var setS = function(data){
     console.log("setS");
@@ -76,6 +86,12 @@ var setE = function(data){
         dataE = null;
         dataS = null;
     }
+}
+
+var setSearchResults = function(data){
+	console.log("This is a test");
+	if (data != null)
+	suggestions = data;
 }
 
 var pathfinding = function(data){

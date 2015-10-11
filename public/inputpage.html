@@ -10,18 +10,43 @@ $(document).ready(function() {
 		if(val === "") return;
 		//You could use this to limit results
 		//if(val.length < 3) return;
-		console.log(val);
+		//console.log(val);
 		$.get("../getsuggestions", {term:val}, function(res) {
+			//console.log(res);
+			suggestions = res.suggestions;
+			//console.log(suggestions);
 			var dataList = $("#searchresultsone");
 			dataList.empty();
-			if(res.DATA.length) {
-				for(var i=0, len=res.DATA.length; i<len; i++) {
-					var opt = $("<option></option>").attr("value", res.DATA[i][0]);
+			if(suggestions.length > 0) {
+				for(var i=0, len=suggestions.length; i<len; i++) {
+					var opt = $("<option></option>").attr("value", suggestions[i]);
 					dataList.append(opt);
 				}
 			}
 		},"json");
 	});
+	
+	$("#end").on("input", function(e) {
+		var val = $(this).val();
+		if(val === "") return;
+		//You could use this to limit results
+		//if(val.length < 3) return;
+		//console.log(val);
+		$.get("../getsuggestions", {term:val}, function(res) {
+			//console.log(res);
+			suggestions = res.suggestions;
+			console.log(suggestions);
+			var dataList = $("#searchresultstwo");
+			dataList.empty();
+			if(suggestions.length > 0) {
+				for(var i=0, len=suggestions.length; i<len; i++) {
+					var opt = $("<option></option>").attr("value", suggestions[i]);
+					dataList.append(opt);
+				}
+			}
+		},"json");
+	});
+	
 })
 </script>	
     </head>
@@ -35,13 +60,16 @@ $(document).ready(function() {
                 <div class="form">
                     <form method = "post" action="/set" >
                         <div id="form-1">
-                            <input type="text" name="start" class = "textbox" placeholder="Start Location" id="search" list="searchresultsone">
+                            <input type="text" name="start" class = "textbox" placeholder="Start Location" id="start" list="searchresultsone">
 							<datalist id="searchresultsone">
-							<option>Ray</option>
+							<option>New York</option>
 							</datalist>
                         </div>
                         <div id="form-2">
-                            <input type="text" name="end" class = "textbox" placeholder="End Location">
+                            <input type="text" name="end" id="end" class = "textbox" placeholder="End Location" list="searchresultstwo">
+							<datalist id="searchresultstwo">
+							<option>New York</option>
+							</datalist>
                         </div>
                         <div id="form-3">
                             <input type="text" name="time" class = "textbox" placeholder="Driving Time per Day">
