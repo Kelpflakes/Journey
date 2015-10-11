@@ -2,6 +2,28 @@
 <html>
     <head>
         <LINK href="home.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+		<script>
+$(document).ready(function() {
+	$("#start").on("input", function(e) {
+		var val = $(this).val();
+		if(val === "") return;
+		//You could use this to limit results
+		//if(val.length < 3) return;
+		console.log(val);
+		$.get("../getsuggestions", {term:val}, function(res) {
+			var dataList = $("#searchresultsone");
+			dataList.empty();
+			if(res.DATA.length) {
+				for(var i=0, len=res.DATA.length; i<len; i++) {
+					var opt = $("<option></option>").attr("value", res.DATA[i][0]);
+					dataList.append(opt);
+				}
+			}
+		},"json");
+	});
+})
+</script>	
     </head>
     <div class="outer-div">
         <body>
@@ -13,7 +35,10 @@
                 <div class="form">
                     <form method = "post" action="/set" >
                         <div id="form-1">
-                            <input type="text" name="start" class = "textbox" placeholder="Start Location">
+                            <input type="text" name="start" class = "textbox" placeholder="Start Location" id="search" list="searchresultsone">
+							<datalist id="searchresultsone">
+							<option>Ray</option>
+							</datalist>
                         </div>
                         <div id="form-2">
                             <input type="text" name="end" class = "textbox" placeholder="End Location">
@@ -22,7 +47,7 @@
                             <input type="text" name="time" class = "textbox" placeholder="Driving Time per Day">
                         </div>
                         <div id="form-4">
-                            <input type="submit" value="Submit" class = "submit" style = "height: 100px">
+                            <input type="submit" value="Submit" class = "submit">
                         </div>
                     </form>
                 </div>

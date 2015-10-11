@@ -8,7 +8,8 @@ var express = require("express"),
     dataS,
     dataE,
     time,
-    path;
+    path,
+	suggestions;
 var resm;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,7 +41,11 @@ router.get("/gettime", function(req, res){
         console.log("time");
         res.send(time);
     });
-    
+
+router.get("/getsuggestions", function(req, res)){
+	req.term;
+	res.send(suggestions);
+}    
 
 var setS = function(data){
     console.log("setS");
