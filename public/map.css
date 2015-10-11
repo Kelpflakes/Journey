@@ -1,9 +1,33 @@
 html{
-    background: url("images/roadtrip2.jpg") no-repeat center center fixed; 
+    background: url("images/roadtrip3.jpg") no-repeat center center fixed; 
     filter: sepia(50%);
     filter: saturate(50%)
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover; 
+}
+
+#sidebar{
+    color: white;
+    float: right;
+    text-align: center;
+    width: 25%;
+    height 800px; 
+    font-size: 24px;
+    overflow-y: auto;
+    
+}
+
+#map{
+    width: 75%; 
+    height: 800px;
+    background: grey; 
+    float: left;
+}
+
+#list{
+    font-size: 20px;
+    text-align: left;
+    
 }

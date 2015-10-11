@@ -23,8 +23,13 @@
      type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-  <div id="map" style="width: 80%; height: 800px; background: grey" />
-  <div id="sidebar" style="width: 20%; height 800px; background: blue" />
+    <div id="map"></div>
+  <div id="sidebar">
+      Route Destinations:
+      <ul id = "list">
+            
+      </ul>
+    </div>
   <script  type="text/javascript" charset="UTF-8" >
     
 var pathSet = null;
@@ -324,6 +329,7 @@ function addPlacesToMap(result) {
 		lng: place.position[1]})
 		marker.content = '<div style="font-size: 10px" ><h3>' + place.title +
       '</h3><h4>' + place.category.title + '</h4>' + place.vicinity + '</div>';
+      $("#list").append("<li>"+ marker.content + "</li>");
 	return marker;
   }));
 }
@@ -340,6 +346,8 @@ function calculateFullTrip(data){
 	params.q = "hotel";
 	search.request(params, {}, onResult, onError);
 	}
+    //setTimeout(parser(), 3000);
+    //console.log(group);
 	return data;
 }
 /*
@@ -389,6 +397,17 @@ function calculateRouteForDay(timePerDay, latitudes, longitudes, timeLengths, wa
 */
 // Now use the map as required...
 //moveMapToBerlin(map);
+      /*
+function parser(){
+    var array = group.getObjects();
+      console.log(array);
+      console.log("call me Ishmael");
+      for (var i = 0; i < array.length; i++){
+          $("#list").append(array[i].content);
+      }
+}
+*/
   </script>
+    
 </body>
 </html>
