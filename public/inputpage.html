@@ -17,8 +17,22 @@ function empty() {
 	if (isNaN(z)){
 	alert("Time must be a number.");
 	return false;
-	}
+	} 
 }
+            
+$.ajax({
+    //type: 'get',
+    url: '../check',
+    success: function (data) {
+        console.log(data);
+        console.log('process complete');
+        if (!data){
+            alert("Not specific enough");
+        }
+    }
+});
+
+
 $(document).ready(function() {
 	$("#start").on("input", function(e) {
 		var val = $(this).val();

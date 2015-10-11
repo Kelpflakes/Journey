@@ -11,7 +11,8 @@ var express = require("express"),
     time,
     path,
 	suggestions,
-	suggestedTerm;
+	suggestedTerm,
+    ready = true;
 var resm;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -61,17 +62,22 @@ router.get("/getsuggestions", function(req, res){
 		//console.log("Sent suggestions");
 	}
 	
-});   
-
+});  
+           
 router.get("/return", function(req, res){
     console.log("returned");
     res.redirect("/inputpage.html");
 });
 
+router.get("/check", function(req, res){
+    console.log("checking");
+    res.send(ready);
+    ready = true;
+});
+
 var setS = function(data){
 	if (data == null){
-		//resm.redirect("/inputpage.html");
-		return;
+		ready = false;
 	}
     console.log("setS");
 	 console.log(data);
@@ -89,8 +95,7 @@ var setS = function(data){
 
 var setE = function(data){
     if (data == null){
-		//resm.redirect("/inputpage.html");
-		return;
+		ready = false;
 	}
     console.log("setE");
 	 console.log(data);

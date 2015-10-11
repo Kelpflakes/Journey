@@ -237,6 +237,7 @@ function processJSON(json){
 	if (obj == null || obj.response == null || obj.response.route[0] == null || obj.response.route[0].leg[0] == null || obj.response.route[0].leg[0].maneuver == null)
 	{
 		alert("Sorry, there was an error. Please try a different query.");
+        window.location.href = "/";
 	}
 	var maneuver = obj.response.route[0].leg[0].maneuver;
 	var data = [[], [], []];
