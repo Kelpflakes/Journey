@@ -1,0 +1,168 @@
+{
+  "response": {
+    "metaInfo": {
+      "timestamp": "2015-10-10T09:32:07Z",
+      "mapVersion": "8.30.59.165",
+      "moduleVersion": "7.2.61.1-1218",
+      "interfaceVersion": "2.6.15"
+    },
+    "route": [
+      {
+        "waypoint": [
+          {
+            "linkId": "+733073542",
+            "mappedPosition": {
+              "latitude": 52.5160414,
+              "longitude": 13.3782982
+            },
+            "originalPosition": {
+              "latitude": 52.5159999,
+              "longitude": 13.3778999
+            },
+            "type": "stopOver",
+            "spot": 0.3859649,
+            "sideOfStreet": "left",
+            "mappedRoadName": "Pariser Platz",
+            "label": "Pariser Platz",
+            "shapeIndex": 0
+          },
+          {
+            "linkId": "+722940051",
+            "mappedPosition": {
+              "latitude": 52.5206534,
+              "longitude": 13.3861095
+            },
+            "originalPosition": {
+              "latitude": 52.5205999,
+              "longitude": 13.3861999
+            },
+            "type": "stopOver",
+            "spot": 0.4347826,
+            "sideOfStreet": "right",
+            "mappedRoadName": "Reichstagufer",
+            "label": "Reichstagufer",
+            "shapeIndex": 16
+          }
+        ],
+        "mode": {
+          "type": "fastest",
+          "transportModes": [
+            "car"
+          ],
+          "trafficMode": "enabled",
+          "feature": []
+        },
+        "leg": [
+          {
+            "start": {
+              "linkId": "+733073542",
+              "mappedPosition": {
+                "latitude": 52.5160414,
+                "longitude": 13.3782982
+              },
+              "originalPosition": {
+                "latitude": 52.5159999,
+                "longitude": 13.3778999
+              },
+              "type": "stopOver",
+              "spot": 0.3859649,
+              "sideOfStreet": "left",
+              "mappedRoadName": "Pariser Platz",
+              "label": "Pariser Platz",
+              "shapeIndex": 0
+            },
+            "end": {
+              "linkId": "+722940051",
+              "mappedPosition": {
+                "latitude": 52.5206534,
+                "longitude": 13.3861095
+              },
+              "originalPosition": {
+                "latitude": 52.5205999,
+                "longitude": 13.3861999
+              },
+              "type": "stopOver",
+              "spot": 0.4347826,
+              "sideOfStreet": "right",
+              "mappedRoadName": "Reichstagufer",
+              "label": "Reichstagufer",
+              "shapeIndex": 16
+            },
+            "length": 957,
+            "travelTime": 310,
+            "maneuver": [
+              {
+                "position": {
+                  "latitude": 52.5160414,
+                  "longitude": 13.3782982
+                },
+                "instruction": "Head <span class=\"heading\">north</span> on <span class=\"street\">Pariser Platz</span>. <span class=\"distance-description\">Go for <span class=\"length\">35 m</span>.</span>",
+                "travelTime": 31,
+                "length": 35,
+                "id": "M1",
+                "_type": "PrivateTransportManeuverType"
+              },
+              {
+                "position": {
+                  "latitude": 52.5163436,
+                  "longitude": 13.3782148
+                },
+                "instruction": "Turn <span class=\"direction\">right</span> onto <span class=\"next-street\">Pariser Platz</span>. <span class=\"distance-description\">Go for <span class=\"length\">185 m</span>.</span>",
+                "travelTime": 149,
+                "length": 185,
+                "id": "M2",
+                "_type": "PrivateTransportManeuverType"
+              },
+              {
+                "position": {
+                  "latitude": 52.5163651,
+                  "longitude": 13.3808541
+                },
+                "instruction": "Turn <span class=\"direction\">left</span> onto <span class=\"next-street\">Wilhelmstraße</span>. <span class=\"distance-description\">Go for <span class=\"length\">287 m</span>.</span>",
+                "travelTime": 53,
+                "length": 287,
+                "id": "M3",
+                "_type": "PrivateTransportManeuverType"
+              },
+              {
+                "position": {
+                  "latitude": 52.5189185,
+                  "longitude": 13.380264
+                },
+                "instruction": "Turn <span class=\"direction\">right</span> onto <span class=\"next-street\">Reichstagufer</span>. <span class=\"distance-description\">Go for <span class=\"length\">450 m</span>.</span>",
+                "travelTime": 77,
+                "length": 450,
+                "id": "M4",
+                "_type": "PrivateTransportManeuverType"
+              },
+              {
+                "position": {
+                  "latitude": 52.5206534,
+                  "longitude": 13.3861095
+                },
+                "instruction": "Arrive at <span class=\"street\">Reichstagufer</span>. Your destination is on the right.",
+                "travelTime": 0,
+                "length": 0,
+                "id": "M5",
+                "_type": "PrivateTransportManeuverType"
+              }
+            ]
+          }
+        ],
+        "summary": {
+          "distance": 957,
+          "trafficTime": 310,
+          "baseTime": 309,
+          "flags": [
+            "noThroughRoad",
+            "builtUpArea"
+          ],
+          "text": "The trip takes <span class=\"length\">957 m</span> and <span class=\"time\">5 mins</span>.",
+          "travelTime": 310,
+          "_type": "RouteSummaryType"
+        }
+      }
+    ],
+    "language": "en-us"
+  }
+}

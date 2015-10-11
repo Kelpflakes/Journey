@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Journey</title>
   <LINK href="map.css" rel="stylesheet" type="text/css">
   <meta name="viewport" content="initial-scale=1.0, width=device-width" />
   <link rel="stylesheet" type="text/css"
@@ -23,19 +24,59 @@
      type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
+ 
     <div id="map"></div>
   <div id="sidebar">
       Route Destinations:
+	  
       <ul id = "list">
-            
       </ul>
+	 <button type="button" id="back">Previous</button>
+	 <button type="button" id="next">Next</button>
+	 <button type="button" id="return">Return to Route Selection</button>
     </div>
   <script  type="text/javascript" charset="UTF-8" >
-    
 var pathSet = null;
 var timePerDay = null;
 var finalDestinationLatitude = null;
 var finalDestinationLongitude = null;
+$( "button" ).click(function() {
+	var b = $(this).context;
+	console.log(b);
+	console.log(b.id);
+	if (b.id == "back"){
+	
+		if (page != 0){
+			page--;
+			$('#next').prop('disabled', false);
+			if (page == 0){
+				$('#back').prop('disabled', true);
+			}
+			else{
+				$('#back').prop('disabled', false);
+			}
+			loadPlaces(page);
+		}
+	}
+	if (b.id == "next"){
+		
+		if (page != Math.ceil(dataArray.length / 7)){
+		$('#back').prop('disabled', false);
+			page++;
+			if (page == Math.ceil(dataArray.length / 7)){
+				$('#next').prop('disabled', true);
+				}
+			else{
+				$('#next').prop('disabled', false);
+				}
+			loadPlaces(page);
+		}
+	}
+});
+var loaded = 0;
+var maxLoaded = 5;
+var dataArray = [];
+var page = 0;
 $.ajax({
     url: "../gettime",
     //type: "get",
@@ -96,8 +137,7 @@ $.ajax({
     }
 });
 
-
-
+		
 /**
  * Moves the map to display over Berlin
  *
@@ -233,12 +273,14 @@ for (var i = 0; i < fullTrip.length; i++){
 
 var nextPartLength = 0;
 var totalTraveledAlong = 0;
+var day = 0;
 function lerp(initialPoint, finalPoint){
 	return initialPoint + (finalPoint - initialPoint) * (totalTraveledAlong / (totalTraveledAlong + nextPartLength))
 }	
 		
 function calculateRouteForDay(timePerDay, latitudes, longitudes, timeLengths, waypoint){
 	//var data = [0, 0, 0, 0];
+	day++;
 	var timePerDayInSeconds = timePerDay * 3600;
 	var lunchPoint = timePerDayInSeconds / 3;
 	var dinnerPoint = lunchPoint * 2;
@@ -329,18 +371,44 @@ function addPlacesToMap(result) {
 		lng: place.position[1]})
 		marker.content = '<div style="font-size: 10px" ><h3>' + place.title +
       '</h3><h4>' + place.category.title + '</h4>' + place.vicinity + '</div>';
+	  //marker.setData(day);
+	  dataArray.push("<li>"+ marker.content + "</li>");
+	  if (loaded < maxLoaded){
       $("#list").append("<li>"+ marker.content + "</li>");
+	  loaded++;
+	  }
 	return marker;
   }));
 }
 
+function loadPlaces(page){
+	$("#list").empty();
+	for (i = 0; i < maxLoaded; i++){
+	$("#list").append(dataArray[maxLoaded * page + i]);
+	}
+}
+
 function calculateFullTrip(data){
 	var waypoint = 0;
+	var d = 0;
 	while (waypoint < data[0].length){
+		d++;
 		waypoint = calculateRouteForDay(timePerDay, data[0], data[1], data[2], waypoint);
+		//$("#list").append("<li>"+ "<input type='checkbox' name=" + d + "value=" + d + " id=" + d + "> Day: " + d + "</li>");
 		//totalRoute.push(day);
 		//waypoint++;
 	}
+	$('#myform :checkbox').click(function() {
+    var $this = $(this);
+    // $this will contain a reference to the checkbox   
+    var array = group.getObjects();
+	for (var cb = 0; cb < array.length; cb++){}
+	if ($this.is(':checked')) {
+        alert(this.id);// the checkbox was checked 
+    } else {
+       alert(this.id); // the checkbox was unchecked
+    }
+});
 	if (finalDestinationLatitude != null && finalDestinationLongitude != null){
 	params.at = finalDestinationLatitude + "," + finalDestinationLongitude;
 	params.q = "hotel";

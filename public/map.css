@@ -15,8 +15,7 @@ html{
     width: 25%;
     height 800px; 
     font-size: 24px;
-    overflow-y: auto;
-    
+    overflow-y: hidden;
 }
 
 #map{

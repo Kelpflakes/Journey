@@ -33,6 +33,12 @@ router.post("/set", function(req, res) {
 	resm = res;
 });
 
+router.get("/cancel", function(req, res){
+        //console.log(path);
+        console.log("cancel");
+        res.redirect("/inputpage.html");
+});
+
 router.get("/getpath", function(req, res){
         //console.log(path);
         console.log("path");
@@ -57,14 +63,20 @@ router.get("/getsuggestions", function(req, res){
 	
 });   
 
+
+
 var setS = function(data){
+	if (data == null){
+		//resm.redirect("/inputpage.html");
+		return;
+	}
     console.log("setS");
 	 console.log(data);
 	
     dataS = data;
 	console.log(dataS);
 	console.log(dataE);
-    if (dataE != null){
+    if (dataE != null && dataS != null){
         pathfinder.route(dataS, dataE, pathfinding);
 		console.log("BGFG1");
         dataE = null;
@@ -73,14 +85,17 @@ var setS = function(data){
 }
 
 var setE = function(data){
-    
+    if (data == null){
+		//resm.redirect("/inputpage.html");
+		return;
+	}
     console.log("setE");
 	 console.log(data);
 	
     dataE = data;
 	console.log(dataS);
 	console.log(dataE);
-    if (dataS != null){
+    if (dataS != null && dataE != null){
         pathfinder.route(dataS, dataE, pathfinding);
 		console.log("BGFG2");
         dataE = null;

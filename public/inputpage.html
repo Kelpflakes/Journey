@@ -1,9 +1,24 @@
 <!DOCTYPE html>
 <html>
     <head>
+		<title>Journey</title>
         <LINK href="home.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 		<script>
+
+function empty() {
+    var x = $("#start").val();
+	var y = $("#end").val();
+	var z = $("#time").val();
+    if (x == "" || y == "" || z == "") {
+        alert("Enter all fields please.");
+        return false;
+    }
+	if (isNaN(z)){
+	alert("Time must be a number.");
+	return false;
+	}
+}
 $(document).ready(function() {
 	$("#start").on("input", function(e) {
 		var val = $(this).val();
@@ -72,10 +87,10 @@ $(document).ready(function() {
 							</datalist>
                         </div>
                         <div id="form-3">
-                            <input type="text" name="time" class = "textbox" placeholder="Driving Time per Day">
+                            <input type="text" id="time" name="time" class = "textbox" placeholder="Driving Time per Day">
                         </div>
                         <div id="form-4">
-                            <input type="submit" value="Submit" class = "submit">
+                            <input type="submit" id="submit" value="Submit" class = "submit" onClick="return empty()">
                         </div>
                     </form>
                 </div>
