@@ -5,7 +5,7 @@
         <LINK href="home.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 		<script>
-
+            
 function empty() {
     var x = $("#start").val();
 	var y = $("#end").val();
@@ -26,9 +26,7 @@ $.ajax({
     success: function (data) {
         console.log(data);
         console.log('process complete');
-        if (!data){
-            alert("Not specific enough");
-        }
+        alert("Not specific enough");
     }
 });
 

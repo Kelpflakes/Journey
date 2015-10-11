@@ -12,7 +12,7 @@ var express = require("express"),
     path,
 	suggestions,
 	suggestedTerm,
-    ready = true;
+    res2;
 var resm;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -70,14 +70,12 @@ router.get("/return", function(req, res){
 });
 
 router.get("/check", function(req, res){
-    console.log("checking");
-    res.send(ready);
-    ready = true;
+    res2 = res;
 });
 
 var setS = function(data){
 	if (data == null){
-		ready = false;
+		res2.redirect("/inputpage.html");
 	}
     console.log("setS");
 	 console.log(data);
@@ -95,7 +93,7 @@ var setS = function(data){
 
 var setE = function(data){
     if (data == null){
-		ready = false;
+		res2.redirect("/inputpage.html");
 	}
     console.log("setE");
 	 console.log(data);
