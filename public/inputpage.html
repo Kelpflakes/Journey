@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html>
-
-<body>
-<h1>Input Page</h1>
-
-<form method = "post" action="/set" >
-Start Location:<br>
-<input type="text" name="start">
-<br>
-End Location:<br>
-<input type="text" name="end">
-<br>
-Driving Time Per Day:<br>
-<input type="text" name="time">
-<br>
-<br>
-<input type="submit" value="Submit">
-</form>
-
-</body>
-
+    <head>
+        <LINK href="home.css" rel="stylesheet" type="text/css">
+    </head>
+    <div class="outer-div">
+        <body>
+            <div class="upper-div">
+                <div id="headline">Journey</div>
+                <div id="sub-headline">Every road is an adventure: plan yours today.</div>
+            </div>
+            <div id="footer"><div class="lower-div">
+                <div class="form">
+                    <form method = "post" action="/set" >
+                        <div id="form-1">
+                            <input type="text" name="start" class = "textbox" placeholder="Start Location">
+                        </div>
+                        <div id="form-2">
+                            <input type="text" name="end" class = "textbox" placeholder="End Location">
+                        </div>
+                        <div id="form-3">
+                            <input type="text" name="time" class = "textbox" placeholder="Driving Time per Day">
+                        </div>
+                        <div id="form-4">
+                            <input type="submit" value="Submit" class = "submit" style = "height: 100px">
+                        </div>
+                    </form>
+                </div>
+            </div></div>
+        </body>
+    </div>
 </html>
