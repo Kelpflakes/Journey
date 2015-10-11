@@ -25,10 +25,12 @@ module.exports = {
                 // dump the raw data
                 //console.log("\n");
                 var response = JSON.parse(buffer);
+				if (response.Response.View[0] != null){
                 console.log(response.Response.View[0].Result[0].Location.NavigationPosition);
                 callback(
                     response.Response.View[0].Result[0].Location.NavigationPosition
                 );
+				}
             }); 
         }); 
     }

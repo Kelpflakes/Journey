@@ -18,13 +18,18 @@
             src="http://js.api.here.com/v3/3.0/mapsjs-places.js"></script>
 			<script type="text/javascript" charset="UTF-8"
     src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+	<script src="http://js.api.here.com/v3/3.0/mapsjs-clustering.js"
+     type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-  <div id="map" style="width: 100%; height: 800px; background: grey" />
+  <div id="map" style="width: 80%; height: 800px; background: grey" />
+  <div id="sidebar" style="width: 20%; height 800px; background: blue" />
   <script  type="text/javascript" charset="UTF-8" >
     
 var pathSet = null;
 var timePerDay = null;
+var finalDestinationLatitude = null;
+var finalDestinationLongitude = null;
 $.ajax({
     url: "../gettime",
     //type: "get",
@@ -107,7 +112,7 @@ var map = new H.Map(document.getElementById('map'),
   defaultLayers.normal.map);
 var group = new H.map.Group();
 group.addEventListener('tap', function (evt) {
-    map.setCenter(evt.target.getPosition());
+    //map.setCenter(evt.target.getPosition());
     openBubble(
       evt.target.getPosition(), evt.target.content);
   }, false);
@@ -147,6 +152,10 @@ function processJSON(json){
 	//console.log(obj.route[0]);
 	//console.log(obj.route[0].leg[0]);
 	//timePerDay = obj.response.metaInfo;
+	if (obj == null || obj.response == null || obj.response.route[0] == null || obj.response.route[0].leg[0] == null || obj.response.route[0].leg[0].maneuver == null)
+	{
+		alert("Sorry, there was an error. Please try a different query.");
+	}
 	var maneuver = obj.response.route[0].leg[0].maneuver;
 	var data = [[], [], []];
 	for (var i = 0; i < maneuver.length; i++){
@@ -154,6 +163,8 @@ function processJSON(json){
 		data[1].push(maneuver[i].position.longitude);
 		data[2].push(maneuver[i].travelTime);
 	}
+	finalDestinationLatitude = data[0][data[0].length - 1];
+	finalDestinationLongitude = data[1][data[1].length - 1];
     //console.log(data);
 	return data;
 }
@@ -165,7 +176,7 @@ var params = {
 	      'q': 'hotel',
 	    //  Search in the Chinatown district in San Francisco:
 	      'at': '37.7942,-122.4070',
-		  'size': '3'
+		  'size': '5'
 	    };
 
 /**
@@ -322,6 +333,11 @@ function calculateFullTrip(data){
 		waypoint = calculateRouteForDay(timePerDay, data[0], data[1], data[2], waypoint);
 		//totalRoute.push(day);
 		//waypoint++;
+	}
+	if (finalDestinationLatitude != null && finalDestinationLongitude != null){
+	params.at = finalDestinationLatitude + "," + finalDestinationLongitude;
+	params.q = "hotel";
+	search.request(params, {}, onResult, onError);
 	}
 	return data;
 }
