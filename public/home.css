@@ -35,17 +35,21 @@
 }
 
 #headline{
-    font-family: 'MotorOil1937';
+    font-family: 'BoldFont';
     text-align: center;
-    font-size: 7em;
+    text-shadow: 2px 2px #000000;
+    font-size: 10em;
     color:azure;
 }
 
 #sub-headline{
-    font-family: 'MotorOil1937';
+    font-family: 'LiberationSans';
     text-align: center;
     font-size: 3em;
-    color:aquamarine;
+    text-shadow: 2px 2px #000000;
+    color:mediumaquamarine;
+    margin-top: 0em;
+    font-weight: bold;
 }
 
 #form-1{
@@ -91,8 +95,13 @@ html{
 }
 
 @font-face {
-    font-family: 'MotorOil1937'; /*a name to be used later*/
-    src: url('images/MotorOil1937.ttf'); /*URL to font*/
+    font-family: 'BoldFont'; /*a name to be used later*/
+    src: url('images/theboldfont.ttf'); /*URL to font*/
+}
+
+@font-face {
+    font-family: 'LiberationSans'; /*a name to be used later*/
+    src: url('images/liberationsans.ttf'); /*URL to font*/
 }
 
 .textbox {
